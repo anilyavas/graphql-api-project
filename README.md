@@ -1,1 +1,0 @@
-# graphql-api-project

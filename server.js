@@ -4,20 +4,26 @@ var { graphql, buildSchema } = require('graphql');
 var schema = buildSchema(`
   type Query {
     hello: String
+    age: Int
   }
 `);
 
 // The rootValue provides a resolver function for each API endpoint
 var rootValue = {
   hello: () => {
-    return 'Hello world!';
+    // fetch data form db
+    // process
+    return 'Hello World!';
+  },
+  age: () => {
+    return 25;
   },
 };
 
 // Run the GraphQL query '{ hello }' and print out the response
 graphql({
   schema,
-  source: '{ hello }',
+  source: '{ age }',
   rootValue,
 }).then((response) => {
   console.log(response);
