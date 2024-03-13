@@ -1,5 +1,7 @@
 var { graphql, buildSchema } = require('graphql');
-
+var express = require('express');
+var { createHandler } = require('graphql-http/lib/use/express');
+var { ruruHTML } = require('ruru/server');
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
   type Query {
@@ -13,18 +15,23 @@ var rootValue = {
   hello: () => {
     // fetch data form db
     // process
-    return 'Hello World!';
+    return 'Hello World 123!';
   },
   age: () => {
     return 25;
   },
 };
 
-// Run the GraphQL query '{ hello }' and print out the response
-graphql({
-  schema,
-  source: '{ age }',
-  rootValue,
-}).then((response) => {
-  console.log(response);
+const app = express();
+
+app.all('/graphql', createHandler({ schema, rootValue }));
+app.get('/', (_req, res) => {
+  res.type('html');
+  res.end(ruruHTML({ endpoint: '/graphql' }));
 });
+
+app.listen(4000);
+console.log(`
+API running on: http://localhost:4000
+Test: https://localhost:4000/graphql?query={hello,age}
+`);
